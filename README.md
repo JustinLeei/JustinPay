@@ -4,6 +4,47 @@
 - Stripe（已实现）
 - Paddle（已实现）
 
+## 项目介绍
+
+JustinPay 是一个现代化的支付集成解决方案，旨在简化多支付渠道的接入流程。通过统一的接口和类型定义，让开发者能够轻松地集成和切换不同的支付提供商。
+
+### 项目结构
+
+```
+src/
+├── interfaces/        # 接口定义
+│   ├── PaymentGateway.ts    # 支付网关接口
+│   ├── PaymentUI.ts         # UI相关接口
+│   └── PaymentResult.ts     # 支付结果接口
+├── gateways/         # 支付网关实现
+│   ├── StripeGateway.ts     # Stripe支付实现
+│   └── PaddleGateway.ts     # Paddle支付实现
+├── factories/        # 工厂类
+│   └── PaymentGatewayFactory.ts  # 支付网关工厂
+├── utils/           # 工具函数
+├── examples/        # 使用示例
+└── index.ts         # 入口文件
+
+tests/               # 测试文件
+├── unit/           # 单元测试
+└── integration/    # 集成测试
+```
+
+### 技术栈
+
+- TypeScript: 提供完整的类型支持
+- Webpack: 构建和打包
+- Jest: 单元测试和集成测试
+- ESLint & Prettier: 代码规范和格式化
+
+### 设计理念
+
+1. **统一接口**: 所有支付网关实现相同的接口，便于切换和扩展
+2. **类型安全**: 使用 TypeScript 提供完整的类型定义和检查
+3. **可扩展性**: 工厂模式使添加新的支付提供商变得简单
+4. **错误处理**: 统一的错误处理机制，提供详细的错误信息
+5. **UI灵活性**: 支持自定义支付界面样式
+
 ## 安装
 
 ```bash
@@ -116,18 +157,58 @@ interface PaymentResult {
 - 支持自定义元数据
 - 内置错误处理
 
-## 开发
+## 开发指南
 
+### 环境要求
+
+- Node.js >= 14
+- npm >= 6
+
+### 开发流程
+
+1. 克隆仓库
 ```bash
-# 安装依赖
-npm install
-
-# 构建
-npm run build
-
-# 运行测试
-npm test
+git clone https://github.com/yourusername/justin-pay.git
+cd justin-pay
 ```
+
+2. 安装依赖
+```bash
+npm install
+```
+
+3. 启动开发环境
+```bash
+npm run dev
+```
+
+4. 运行测试
+```bash
+# 运行所有测试
+npm test
+
+# 运行单元测试
+npm run test:unit
+
+# 运行集成测试
+npm run test:integration
+
+# 查看测试覆盖率
+npm run test:coverage
+```
+
+5. 构建
+```bash
+npm run build
+```
+
+### 贡献指南
+
+1. Fork 项目
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交改动 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 提交 Pull Request
 
 ## 许可证
 
