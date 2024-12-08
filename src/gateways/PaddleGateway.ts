@@ -48,7 +48,7 @@ export class PaddleGateway implements PaymentGateway {
 
     // 加载Paddle.js
     await this.loadPaddleJs();
-
+    
     // 初始化Paddle
     (window as any).Paddle.Environment.set(config.environment || 'sandbox');
     (window as any).Paddle.Setup({ 

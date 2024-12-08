@@ -1,4 +1,3 @@
-import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { PaymentGateway, PaymentGatewayConfig, PaymentParams, PaymentResult } from '../interfaces/PaymentGateway';
 
 /**
@@ -12,7 +11,7 @@ interface StripeConfig extends PaymentGatewayConfig {
  * Stripe支付网关实现
  */
 export class StripeGateway implements PaymentGateway {
-  private stripe: Stripe | null = null;
+  private stripe: any = null;
   private config: StripeConfig | null = null;
   private elements: any = null;
   private paymentElement: any = null;
@@ -28,14 +27,24 @@ export class StripeGateway implements PaymentGateway {
    * 加载Stripe.js
    */
   private async loadStripeJs(): Promise<void> {
-    if (!this.config?.publicKey) {
-      throw new Error('缺少Stripe publicKey配置');
+    if (StripeGateway.isStripeJsLoaded()) {
+      return;
     }
 
-    this.stripe = await loadStripe(this.config.publicKey);
-    if (!this.stripe) {
-      throw new Error('加载Stripe.js失败');
-    }
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://js.stripe.com/v3/';
+      script.async = true;
+      
+      script.onload = () => {
+        // 初始化Stripe实例
+        this.stripe = (window as any).Stripe(this.config!.publicKey);
+        resolve();
+      };
+      script.onerror = () => reject(new Error('加载Stripe JS SDK失败'));
+      
+      document.head.appendChild(script);
+    });
   }
 
   async initialize(config: StripeConfig): Promise<void> {
@@ -44,6 +53,9 @@ export class StripeGateway implements PaymentGateway {
     // 加载Stripe.js
     if (!StripeGateway.isStripeJsLoaded()) {
       await this.loadStripeJs();
+    } else {
+      // 如果已加载，直接初始化Stripe实例
+      this.stripe = (window as any).Stripe(config.publicKey);
     }
 
     // 初始化UI元素
@@ -51,6 +63,30 @@ export class StripeGateway implements PaymentGateway {
     if (!container) {
       throw new Error(`未找到容器元素: ${config.containerId}`);
     }
+
+    // 创建支付表单
+    container.innerHTML = `
+      <form id="payment-form">
+        <div id="payment-element"></div>
+        <div id="error-message" style="color: #df1b41; margin-top: 8px;"></div>
+        <button type="submit" id="submit-button" style="margin-top: 16px; padding: 8px 16px;">
+          支付
+        </button>
+      </form>
+    `;
+
+    // 创建支付元素
+    this.elements = this.stripe.elements({
+      appearance: {
+        theme: 'stripe',
+        ...config.style,
+      },
+      locale: 'zh',
+    });
+
+    // 创建支付元素并挂载
+    this.paymentElement = this.elements.create('payment');
+    this.paymentElement.mount('#payment-element');
   }
 
   async createPayment(params: PaymentParams): Promise<PaymentResult> {
@@ -231,7 +267,7 @@ export class StripeGateway implements PaymentGateway {
       submitButton.disabled = true;
 
       try {
-        const { error } = await this.stripe!.confirmPayment({
+        const { error } = await this.stripe.confirmPayment({
           elements: this.elements!,
           confirmParams: {
             return_url: params.returnUrl || window.location.href,
@@ -245,7 +281,7 @@ export class StripeGateway implements PaymentGateway {
           }
           this.config?.onError?.(error);
         } else {
-          const result = await this.stripe!.retrievePaymentIntent(clientSecret);
+          const result = await this.stripe.retrievePaymentIntent(clientSecret);
           this.config?.onSuccess?.(result);
         }
       } catch (e) {
