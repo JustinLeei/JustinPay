@@ -1,0 +1,42 @@
+{
+  "name": "justin-pay",
+  "version": "1.0.0",
+  "description": "统一支付集成库，支持多种支付提供商",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "prepare": "npm run build",
+    "test:payment": "cross-env NODE_ENV=test npx tsx src/examples/payment-example.test.ts"
+  },
+  "keywords": [
+    "payment",
+    "stripe",
+    "justin-pay"
+  ],
+  "author": "JustinLee",
+  "license": "MIT",
+  "dependencies": {
+    "@stripe/stripe-js": "^2.2.0",
+    "@types/node": "^20.8.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "stripe": "^13.11.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@types/jest": "^29.5.14",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.2.0"
+  }
+}
