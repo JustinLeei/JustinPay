@@ -13,21 +13,19 @@ JustinPay 是一个现代化的支付集成解决方案，旨在简化多支付�
 ```
 src/
 ├── interfaces/        # 接口定义
-│   ├── PaymentGateway.ts    # 支付网关接口
-│   ├── PaymentUI.ts         # UI相关接口
-│   └── PaymentResult.ts     # 支付结果接口
+│   └── PaymentGateway.ts    # 统一支付网关接口定义
 ├── gateways/         # 支付网关实现
 │   ├── StripeGateway.ts     # Stripe支付实现
 │   └── PaddleGateway.ts     # Paddle支付实现
 ├── factories/        # 工厂类
 │   └── PaymentGatewayFactory.ts  # 支付网关工厂
-├── utils/           # 工具函数
-├── examples/        # 使用示例
-└── index.ts         # 入口文件
+└── __tests__/       # 测试文件
 
-tests/               # 测试文件
-├── unit/           # 单元测试
-└── integration/    # 集成测试
+配置文件：
+├── package.json      # 项目配置和依赖
+├── tsconfig.json    # TypeScript配置
+├── webpack.config.js # Webpack配置
+└── jest.config.js   # Jest测试配置
 ```
 
 ### 技术栈
