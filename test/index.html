@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>支付网关测试</title>
+  <style>
+    .payment-container {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .test-buttons {
+      margin-bottom: 20px;
+    }
+    .test-result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #eee;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-container">
+    <div class="test-buttons">
+      <button onclick="PaymentGateway.testStripe()">测试Stripe支付</button>
+      <button onclick="PaymentGateway.testPaddle()">测试Paddle支付</button>
+    </div>
+    <div id="payment-form"></div>
+    <div class="test-result" id="test-result"></div>
+  </div>
+  <script src="../dist/payment-gateway.js"></script>
+  <script src="../dist/test-script.js"></script>
+</body>
+</html> 

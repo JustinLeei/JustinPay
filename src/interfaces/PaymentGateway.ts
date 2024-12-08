@@ -2,19 +2,13 @@
  * 支付网关配置接口
  */
 export interface PaymentGatewayConfig {
-  // 基础配置
-  apiKey: string;
-  publicKey?: string;
+  apiKey: string;         // 改为必需字段
+  containerId: string;    // UI容器ID
   environment?: 'sandbox' | 'production';
-  
-  // UI配置
-  containerId: string;
-  style?: Record<string, any>;
-  
-  // 回调函数
   onSuccess?: (result: any) => void;
   onError?: (error: any) => void;
   onCancel?: () => void;
+  style?: any;
 }
 
 /**
@@ -67,7 +61,7 @@ export interface PaymentGateway {
   /**
    * 退款
    * @param paymentId 支付ID
-   * @param amount 退��金额（可选）
+   * @param amount 退款金额（可选）
    */
   refund(paymentId: string, amount?: number): Promise<PaymentResult>;
   
@@ -75,4 +69,16 @@ export interface PaymentGateway {
    * 销毁支付实例
    */
   destroy?(): Promise<void>;
-} 
+  
+  /**
+   * 创建支付会话
+   */
+  createPaymentSession(amount: number, currency: string): Promise<string>;
+  
+  /**
+   * 获取支付配置
+   */
+  getConfig(): any;
+}
+
+export default PaymentGateway; 

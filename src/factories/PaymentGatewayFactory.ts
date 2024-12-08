@@ -1,4 +1,4 @@
-import { PaymentGateway } from '../interfaces/PaymentGateway';
+import { PaymentGateway, PaymentGatewayConfig } from '../interfaces/PaymentGateway';
 import { StripeGateway } from '../gateways/StripeGateway';
 import { PaddleGateway } from '../gateways/PaddleGateway';
 
@@ -13,7 +13,7 @@ export type PaymentGatewayType = 'stripe' | 'paddle' | 'custom';
  */
 export class PaymentGatewayFactory {
   private static instance: PaymentGatewayFactory;
-  private gateways: Map<string, new () => PaymentGateway>;
+  private gateways: Map<string, new (config: PaymentGatewayConfig) => PaymentGateway>;
 
   private constructor() {
     this.gateways = new Map();
@@ -38,21 +38,22 @@ export class PaymentGatewayFactory {
    * @param type 支付网关类型
    * @param gatewayClass 支付网关类
    */
-  public register(type: string, gatewayClass: new () => PaymentGateway): void {
+  public register(type: string, gatewayClass: new (config: PaymentGatewayConfig) => PaymentGateway): void {
     this.gateways.set(type, gatewayClass);
   }
 
   /**
    * 创建支付网关实例
    * @param type 支付网关类型
+   * @param config 支付网关配置
    * @throws Error 如果支付网关类型未注册
    */
-  public create(type: PaymentGatewayType): PaymentGateway {
+  public create(type: PaymentGatewayType, config: PaymentGatewayConfig): PaymentGateway {
     const GatewayClass = this.gateways.get(type);
     if (!GatewayClass) {
       throw new Error(`未注册的支付网关类型: ${type}`);
     }
-    return new GatewayClass();
+    return new GatewayClass(config);
   }
 
   /**

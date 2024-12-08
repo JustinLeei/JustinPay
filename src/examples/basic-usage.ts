@@ -1,15 +1,12 @@
 import { PaymentGatewayFactory } from '../factories/PaymentGatewayFactory';
-import { PaymentParams } from '../interfaces/PaymentGateway';
+import { PaymentParams, PaymentGatewayConfig } from '../interfaces/PaymentGateway';
 
 async function stripeExample() {
   // 获取支付网关工厂实例
   const factory = PaymentGatewayFactory.getInstance();
 
-  // 创建Stripe支付网关
-  const stripeGateway = factory.create('stripe');
-  
-  // 初始化支付网关
-  await stripeGateway.initialize({
+  // 支付网关配置
+  const config: PaymentGatewayConfig = {
     apiKey: 'your_stripe_api_key',
     containerId: 'payment-form',
     environment: 'sandbox',
@@ -19,7 +16,13 @@ async function stripeExample() {
     onError: (error) => {
       console.error('支付失败:', error);
     }
-  });
+  };
+
+  // 创建Stripe支付网关
+  const stripeGateway = factory.create('stripe', config);
+  
+  // 初始化支付网关
+  await stripeGateway.initialize(config);
 
   // 创建支付
   const paymentParams: PaymentParams = {
@@ -52,9 +55,9 @@ async function stripeExample() {
 
 async function paddleExample() {
   const factory = PaymentGatewayFactory.getInstance();
-  const paddleGateway = factory.create('paddle');
-  
-  await paddleGateway.initialize({
+
+  // 支付网关配置
+  const config: PaymentGatewayConfig = {
     apiKey: 'your_paddle_api_key',
     containerId: 'payment-form',
     environment: 'sandbox',
@@ -64,7 +67,11 @@ async function paddleExample() {
     onCancel: () => {
       console.log('支付已取消');
     }
-  });
+  };
+  
+  const paddleGateway = factory.create('paddle', config);
+  
+  await paddleGateway.initialize(config);
 
   const paymentParams: PaymentParams = {
     amount: 1000,

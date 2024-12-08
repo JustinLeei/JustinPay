@@ -1,14 +1,18 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'production',
-  entry: './src/index.ts',
+  entry: {
+    'payment-gateway': './src/index.ts',
+    'test-script': './test/test-script.ts'
+  },
   output: {
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
-    filename: 'justin-pay.min.js',
-    library: 'JustinPay',
-    libraryTarget: 'umd',
-    globalObject: 'this'
+    library: {
+      name: 'PaymentGateway',
+      type: 'window',
+      export: 'default'
+    }
   },
   module: {
     rules: [
@@ -21,9 +25,5 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
-  },
-  externals: {
-    'stripe': 'Stripe',
-    '@stripe/stripe-js': 'loadStripe'
   }
 };

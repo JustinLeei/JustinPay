@@ -195,4 +195,25 @@ export class PaddleGateway implements PaymentGateway {
     this.checkoutInstance = null;
     this.config = null;
   }
+
+  // 实现缺失的方法
+  async createPaymentSession(amount: number, currency: string): Promise<string> {
+    const result = await this.createPayment({
+      amount,
+      currency,
+      description: 'Payment Session'
+    });
+    return result.transactionId;
+  }
+
+  getConfig(): any {
+    if (!this.config) {
+      throw new Error('Paddle未初始化');
+    }
+    return {
+      vendorId: this.config.vendorId,
+      containerId: this.config.containerId,
+      environment: this.config.environment
+    };
+  }
 } 
